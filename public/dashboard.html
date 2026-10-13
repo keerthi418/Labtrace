@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LogLens · Dashboard</title>
+  <link rel="stylesheet" href="/css/app.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="logo">LL</div>
+        <div>
+          <h1>Log<span>Lens</span> · LabTrace</h1>
+          <div class="sub">EVIDENCE → RULE → HUMAN CHECK</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <span class="user-chip" id="userChip">—</span>
+        <button class="btn btn-ghost btn-sm" id="btnDemo">▶ Load Demo</button>
+        <label class="btn btn-primary btn-sm" for="csvFile">⬆ Upload CSV</label>
+        <input type="file" id="csvFile" accept=".csv,text/csv" hidden />
+        <button class="btn btn-ghost btn-sm" id="btnLogout">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="metrics" id="metrics">
+      <div class="metric-card">
+        <div class="metric-value" id="mEvents">—</div>
+        <div class="metric-label">Events</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value" id="mCases">—</div>
+        <div class="metric-label">Cases</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value danger" id="mReview">—</div>
+        <div class="metric-label">To Review</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value accent" id="mRoutine">—</div>
+        <div class="metric-label">Routine</div>
+      </div>
+    </div>
+
+    <div class="grid-main">
+      <div>
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Incident Review Queue</h2>
+            <span id="queueInfo" style="font-family:var(--mono);font-size:0.72rem;color:var(--text-dim)"></span>
+          </div>
+          <div class="panel-body" style="padding:0;min-height:260px" id="tableWrap">
+            <div class="empty-state" id="emptyState">
+              <h3>No cases yet</h3>
+              <p>Click <strong>Load Demo</strong> to run the synthetic lab scenario, or upload a CSV of login events.</p>
+            </div>
+            <table class="cases-table hidden" id="casesTable">
+              <thead>
+                <tr>
+                  <th>Priority</th>
+                  <th>Account · Computer</th>
+                  <th>Rules</th>
+                  <th>Summary</th>
+                  <th>Status</th>
+                  <th>Events</th>
+                </tr>
+              </thead>
+              <tbody id="casesBody"></tbody>
+            </table>
+          </div>
+          <div class="status-bar">
+            <span>Secure session · Local SQLite · No data leaves this machine</span>
+            <span id="statusMsg"></span>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:14px">
+          <div class="panel-header">
+            <h2>Evidence &amp; Human Check</h2>
+          </div>
+          <div class="panel-body">
+            <div class="empty-state" id="evEmpty" style="padding:24px">
+              <p>Select a case to inspect evidence, matched rules, and suggested human verification.</p>
+            </div>
+            <div class="evidence hidden" id="evContent"></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel">
+          <div class="panel-header"><h2>Live Controls</h2></div>
+          <div class="panel-body">
+            <div class="control-row">
+              <label>N — Failure threshold</label>
+              <input type="number" id="paramN" min="1" max="20" value="3" />
+              <span class="hint">Min failures to flag R1</span>
+            </div>
+            <div class="control-row">
+              <label>W — Window (minutes)</label>
+              <input type="number" id="paramW" min="1" max="120" value="5" />
+              <span class="hint">Look-back before success</span>
+            </div>
+            <div class="control-row">
+              <label>Lab Hours</label>
+              <div class="time-row">
+                <input type="time" id="paramOpen" value="08:30" />
+                <input type="time" id="paramClose" value="17:30" />
+              </div>
+              <span class="hint">Open → Close (R2)</span>
+            </div>
+            <button class="btn btn-primary btn-block" id="btnReplay" style="margin-top:6px">
+              ↻ Replay Detection
+            </button>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:14px">
+          <div class="panel-header"><h2>Rules</h2></div>
+          <div class="panel-body" style="font-size:0.8rem;color:var(--text-dim)">
+            <p style="margin-bottom:10px">
+              <strong style="color:var(--danger)">R1</strong> Failure Burst → Success<br/>
+              ≥ N failures within W min, then success.
+            </p>
+            <p style="margin-bottom:10px">
+              <strong style="color:var(--purple)">R2</strong> After-Hours Success<br/>
+              Success outside lab open–close.
+            </p>
+            <p>
+              <strong style="color:var(--accent)">Routine</strong><br/>
+              Failures present but no R1/R2 — reason shown.
+            </p>
+            <p style="font-size:0.72rem;border-top:1px solid var(--border);padding-top:10px;margin-top:10px">
+              Department is display-only. Never used in detection.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>

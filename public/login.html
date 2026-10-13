@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LogLens · Login</title>
+  <link rel="stylesheet" href="/css/app.css" />
+</head>
+<body class="login-page">
+  <div class="login-bg">
+    <div class="grid-overlay"></div>
+  </div>
+
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="logo">LL</div>
+      <div>
+        <h1>Log<span>Lens</span></h1>
+        <p class="tag">LabTrace · Evidence-First Access Alerts</p>
+      </div>
+    </div>
+
+    <div class="login-motto">
+      <span>EVIDENCE</span>
+      <span class="arrow">→</span>
+      <span>RULE</span>
+      <span class="arrow">→</span>
+      <span>HUMAN CHECK</span>
+    </div>
+
+    <form id="loginForm" autocomplete="off">
+      <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required autofocus
+               placeholder="admin or analyst" spellcheck="false" />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required
+               placeholder="••••••••" />
+      </div>
+      <div id="loginError" class="error-msg hidden"></div>
+      <button type="submit" class="btn btn-primary btn-block" id="loginBtn">
+        Authenticate
+      </button>
+    </form>
+
+    <div class="login-hint">
+      <p><strong>Demo accounts</strong></p>
+      <code>admin</code> / <code>LabTrace@2025</code><br/>
+      <code>analyst</code> / <code>Analyst@2025</code>
+    </div>
+
+    <p class="secure-note">
+      🔒 Session · bcrypt · Helmet · Rate-limited · SQLite local
+    </p>
+  </div>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const errEl = document.getElementById('loginError');
+    const btn = document.getElementById('loginBtn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errEl.classList.add('hidden');
+      btn.disabled = true;
+      btn.textContent = 'Verifying…';
+
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: document.getElementById('username').value.trim(),
+            password: document.getElementById('password').value,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Login failed');
+        window.location.href = '/dashboard.html';
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.classList.remove('hidden');
+        btn.disabled = false;
+        btn.textContent = 'Authenticate';
+      }
+    });
+  </script>
+</body>
+</html>

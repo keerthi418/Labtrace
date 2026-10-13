@@ -1,0 +1,24 @@
+{
+  "name": "loglens-labtrace",
+  "version": "1.0.0",
+  "description": "LogLens (LabTrace) — Evidence-first access alerts for shared labs.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.7",
+    "csv-parse": "^5.6.0",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "express-session": "^1.18.1",
+    "helmet": "^8.0.0",
+    "multer": "^1.4.5-lts.1",
+    "sql.js": "^1.12.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "private": true
+}
